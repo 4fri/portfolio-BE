@@ -1,30 +1,27 @@
 const express = require('express');
+const dotenv = require('dotenv');
 const app = express();
-require('dotenv').config();
 
-// Import routes
-const authRoutes = require('./routes/auth.routes');
-const profileRoutes = require('./routes/profile.routes');
+// Load environment variables
+dotenv.config();
 
+// Middleware
 app.use(express.json());
 
-// Root route
+// Routes
 app.get('/', (req, res) => {
   res.json({ message: 'API Portfolio Project is running' });
 });
 
-// Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/profile', profileRoutes);
+app.use('/api/auth', require('./routes/auth.routes'));
+app.use('/api/profile', require('./routes/profile.routes'));
 
-// 404 handler
+// 404 Not Found handler
 app.use((req, res, next) => {
-  const err = new Error('Not Found');
-  err.status = 404;
-  next(err);
+  res.status(404).json({ message: 'Not Found' });
 });
 
-// Global error handler
+// Global Error Handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({ message: err.message || 'Internal Server Error' });
