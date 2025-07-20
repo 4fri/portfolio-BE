@@ -24,8 +24,15 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
-      role: {
-        type: Sequelize.STRING
+      roleId: {
+        type: Sequelize.UUID, // ✅ Pakai Sequelize.UUID
+        allowNull: false,
+        references: {
+          model: 'Roles',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'RESTRICT'
       },
       createdAt: {
         allowNull: false,
